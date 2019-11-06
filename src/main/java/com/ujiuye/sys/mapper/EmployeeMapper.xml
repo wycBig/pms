@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.sys.mapper.EmployeeMapper" >
+    <insert id="insertEmp" useGeneratedKeys="true" keyProperty="eid" >
+        insert into employee (ename,esex,eage,telephone,hiredate,pnum,username,
+        password,remark,p_fk) values (#{ename},#{esex},#{eage},#{telephone},#{hiredate},
+        #{pnum},#{username},#{password},#{remark},#{pFk})
+    </insert>
+
+
+    <select id="getJiLi" resultType="com.ujiuye.sys.bean.Employee">
+    select * from employee where p_fk = 4
+  </select>
+    <select id="login" resultType="com.ujiuye.sys.bean.Employee">
+      select * from employee where username = #{username} and password = #{password}
+    </select>
+</mapper>

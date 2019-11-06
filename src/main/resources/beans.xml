@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 配置包过滤除了web层的包 -->
+    <context:component-scan base-package="com.ujiuye">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+    </context:component-scan>
+    <!-- 加载数据源配置文件 -->
+    <context:property-placeholder location="classpath:jdbc.properties" />
+    <!-- 配置数据源 -->
+    <bean class="com.alibaba.druid.pool.DruidDataSource" id="dataSource">
+        <property name="username" value="${jdbc.userName}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="url" value="${jdbc.jdbcUrl}" />
+        <property name="driverClassName" value="${jdbc.driverClass}" />
+    </bean>
+   <!-- &lt;!&ndash; 配置数据源事务管理器 &ndash;&gt;
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager" >
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    &lt;!&ndash; 开启基于声明式事务的注解 &ndash;&gt;
+    <tx:annotation-driven transaction-manager="transactionManager" />-->
+    <!-- 创建sqlsessionfactorybean全局配置文件 -->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sessionFactory" >
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+    </bean>
+    <!-- 扫描mapper包 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" id="configurer">
+        <property name="basePackage" value="com.ujiuye.*.mapper" />
+    </bean>
+
+    <!--&lt;!&ndash; 基于配置的xml事务管理 &ndash;&gt;
+    <aop:config>
+        &lt;!&ndash; 配置切入点表达式 &ndash;&gt;
+        <aop:pointcut id="txPoint" expression="execution(* com.ujiuye .. *(..))"></aop:pointcut>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"></aop:advisor>
+    </aop:config>
+    &lt;!&ndash; 配置事务 增强，事物如何切入 &ndash;&gt;
+    <tx:advice id="txAdvice">
+        <tx:attributes>
+            &lt;!&ndash; 所有方法 &ndash;&gt;
+            <tx:method name="*"/>
+            &lt;!&ndash; 所有有get开始的方法 &ndash;&gt;
+            <tx:method name="get*" read-only="true"></tx:method>
+        </tx:attributes>
+    </tx:advice>-->
+    <import resource="classpath:javaMail.xml"></import>
+    <import resource="classpath:applicationContext_redis.xml"></import>
+    <import resource="classpath:application_transaction.xml"></import>
+</beans>

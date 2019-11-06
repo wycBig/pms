@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.pro.mapper.ModelMapper" >
+    <insert id="addProject">
+        INSERT INTO module (proname,analysis_fk,modname,level,simpledis,detaileddis,remark) VALUES
+        (#{proname},#{analysisFk},#{modname},#{level},#{simpledis},#{detaileddis},#{remark})
+    </insert>
+
+    <select id="getTitle" resultType="com.ujiuye.anal.bean.Analysis">
+        select * from analysis where proname = (SELECT pname FROM project WHERE pid = #{pid})
+    </select>
+    <select id="getModel" resultType="com.ujiuye.pro.bean.Model">
+        SELECT * FROM module WHERE analysis_fk = #{id}
+    </select>
+    <select id="getAllModel" resultType="com.ujiuye.pro.bean.Model">
+        SELECT * FROM module
+    </select>
+</mapper>

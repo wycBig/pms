@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!--1.job作业-->
+    <bean id="logPrinter" class="com.ujiuye.jobs.LogPrinter"></bean>
+
+    <!-- 2.JobDetail对象-->
+    <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="logPrinter" />
+        <property name="targetMethod" value="printLog" />
+    </bean>
+
+    <!--3.配置trigger触发器 -->
+    <!--<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        &lt;!&ndash; see the example of method invoking job above &ndash;&gt;
+        <property name="jobDetail" ref="jobDetail" />
+        &lt;!&ndash; 10 seconds &ndash;&gt;
+        <property name="startDelay" value="5000" />
+        &lt;!&ndash; repeat every 50 seconds &ndash;&gt;
+        <property name="repeatInterval" value="3000" />
+    </bean>-->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="jobDetail" />
+        <property name="cronExpression" value="*/5 * * * * ?" /><!-- 从14点开始直到14点59分每隔1分钟运行一次 -->
+    </bean>
+    <!-- 4.配置scheduler容器 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+            </list>
+        </property>
+    </bean>
+</beans>

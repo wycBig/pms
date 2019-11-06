@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.usual.mapper.ArchivesMapper" >
+
+  <select id="getAllArch" resultMap="getAllArchMap">
+
+    SELECT a.`dnum` ,e.`ename`,e.`eage`,a.`school`,a.`hirdate`,e.`telephone`,
+    a.`xueli`,a.`email`,a.`zzmm`,a.`minzu`,a.`remark`
+    FROM archives a LEFT JOIN employee e
+    ON  e.`eid` = a.`emp_fk`
+  </select>
+
+  <resultMap id="getAllArchMap" type="com.ujiuye.usual.bean.Archives">
+    <id column="dnum" property="dnum" ></id>
+    <result column="ename" property="employee.ename" ></result>
+    <result column="eage" property="employee.eage" ></result>
+    <result column="school" property="school" ></result>
+    <result column="hirdate" property="hirdate" ></result>
+    <result column="telephone" property="employee.telephone" ></result>
+    <result column="xueli" property="xueli" ></result>
+    <result column="email" property="email" ></result>
+    <result column="zzmm" property="zzmm" ></result>
+    <result column="minzu" property="minzu" ></result>
+    <result column="remark" property="remark"></result>
+  </resultMap>
+  <select id="getArch" resultMap="getArchMap">
+    SELECT a.`dnum`, e.`ename`,a.`school`,e.`hiredate`,a.`hirdate`,l.`jdis`,d.`dname`,
+      e.`esex`,a.`zhuanye`,a.`minzu`,a.`sosperson`,p.`name`,a.`email`,a.`remark`
+      FROM employee e LEFT JOIN archives a
+      ON a.`emp_fk` = e.`eid`
+      LEFT JOIN dept d
+      ON e.`d_fk` = d.`deptno`
+      LEFT JOIN `position` p
+      ON e.`p_fk` = p.`id`
+      LEFT JOIN `level` l
+      ON e.`l_fk` = l.`jid`
+      WHERE a.`dnum` =  #{dnum}
+  </select>
+  <!-- 查询邮箱 -->
+  <select id="getEmail" resultMap="getEmailMap">
+      SELECT e.`eid`,a.`email`,e.`ename`
+      FROM employee e INNER JOIN `archives` a ON
+      e.`eid` = a.`emp_fk`
+      WHERE eid != #{eid}
+  </select>
+<resultMap id="getEmailMap" type="com.ujiuye.sys.bean.Employee">
+  <id column="eid" property="eid"></id>
+  <result column="ename" property="ename"></result>
+  <result column="email" property="archives.email"></result>
+</resultMap>
+  <resultMap id="getArchMap" type="com.ujiuye.usual.bean.Archives">
+    <id column="dnum" property="dnum" ></id>
+    <result column="ename" property="employee.ename" ></result>
+    <result column="school" property="school" ></result>
+    <result column="hirdate" property="hirdate" ></result>
+    <result column="hirdate" property="employee.hiredate" ></result>
+    <result column="jdis" property="level.jdis" ></result>
+    <result column="dname" property="dept.dname" ></result>
+    <result column="esex" property="employee.esex"></result>
+    <result column="zhuanye" property="zhuanye" ></result>
+    <result column="minzu" property="minzu" ></result>
+    <result column="sosperson" property="sosperson" ></result>
+    <result column="name" property="position.name" ></result>
+    <result column="email" property="email" ></result>
+    <result column="remark" property="remark"></result>
+  </resultMap>
+</mapper>

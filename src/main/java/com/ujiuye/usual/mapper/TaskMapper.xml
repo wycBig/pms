@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.usual.mapper.TaskMapper" >
+  <insert id="addTask">
+     insert into task (starttime,endtime,level,remark,emp_fk,tasktitle,fun_fk)
+     values (#{starttime},#{endtime},#{level},#{remark},#{empFk},#{tasktitle},#{funFk})
+  </insert>
+    <!-- 修改状态 -->
+    <update id="upateStatus">
+        UPDATE task SET `status` = 1 WHERE id = #{id}
+    </update>
+    <select id="getFunction" resultType="com.ujiuye.pro.bean.Function">
+    select * from function
+  </select>
+  <select id="getPerson" resultType="com.ujiuye.sys.bean.Employee">
+    select * from employee
+  </select>
+    <select id="getAllTask" resultMap="getAllTaskMap">
+        SELECT k.`id`, k.`tasktitle`, k.`starttime`,k.`endtime`,k.`status`,k.`level`,e.`ename`
+        FROM task k LEFT JOIN
+            employee e
+            ON k.`emp_fk2` = e.`eid` OR k.`emp_fk` = e.`eid`
+    </select>
+
+    <resultMap id="getAllTaskMap" type="com.ujiuye.usual.bean.Task">
+        <id column="id" property="id" ></id>
+        <result column="tasktitle" property="tasktitle" />
+        <result column="starttime" property="starttime" />
+        <result column="endtime" property="endtime" />
+        <result column="status" property="status" />
+        <result column="level" property="level" />
+        <result column="ename" property="employee.ename" />
+    </resultMap>
+    <select id="getMySelf" resultMap="getAllTaskMap">
+        SELECT k.`tasktitle`, k.`starttime`,k.`endtime`,k.`status`,k.`level`,e.`ename`
+        FROM task k LEFT JOIN
+            employee e
+            ON k.`emp_fk2` = e.`eid` OR k.`emp_fk` = e.`eid`
+            where e.`eid` = #{eid}
+    </select>
+</mapper>

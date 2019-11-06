@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.sys.mapper.SourcesMapper" >
+  <insert id="saveInfo">
+    insert into sources values (null,#{name},#{url},#{remark},#{pid},null)
+  </insert>
+  <update id="updateSource">
+    update sources set name=#{name},url=#{url},remark=#{remark} where id = #{id}
+  </update>
+  <delete id="deleteSource">
+    delete from sources where id = #{id}
+  </delete>
+
+  <select id="getSourcesList" resultType="com.ujiuye.sys.bean.Sources">
+    select id,name,remark,pid,icon from sources where pid = #{id}
+  </select>
+  <select id="selectSource" resultType="com.ujiuye.sys.bean.Sources">
+    select id,name,url,remark,pid,icon from sources where id = #{id}
+  </select>
+  <select id="getSourceById" resultType="com.ujiuye.sys.bean.Sources">
+    SELECT s.*
+    FROM employee e LEFT JOIN emp_role er
+    ON e.`eid` = er.`eid`
+    LEFT JOIN role r
+    ON er.`rid` = r.`roleid`
+    LEFT JOIN role_sources rs
+    ON r.`roleid` = rs.`rid`
+    LEFT JOIN sources s
+    ON rs.`sid` = s.`id`
+    WHERE e.eid = #{eid} AND s.`pid` = #{pid}
+  </select>
+</mapper>

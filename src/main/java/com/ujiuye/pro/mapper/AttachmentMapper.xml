@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.pro.mapper.AttachmentMapper" >
+
+
+  <insert id="insert">
+    insert into attachment (pro_fk, attname,
+      attdis, remark, path
+      )
+    values (#{proFk}, #{attname},
+      #{attdis}, #{remark}, #{path}
+      )
+  </insert>
+  <select id="getAttachAll" resultMap="getConditionMap">
+    SELECT a.`id`, a.`attname`,p.`pname`,p.`starttime`,p.`endtime`,attt.cou
+    FROM attachment a LEFT JOIN project p
+    ON a.`pro_fk` = p.`pid`
+    LEFT JOIN (SELECT COUNT(pro_fk) cou,att.`pro_fk` fk FROM attachment att GROUP BY pro_fk ) attt
+    ON a.`pro_fk` = attt.fk
+  </select>
+  <select id="selectByPrimaryKey" resultType="com.ujiuye.pro.bean.Attachment">
+      select * from attachment where id = #{id}
+  </select>
+  <resultMap id="getConditionMap" type="com.ujiuye.pro.bean.Attachment">
+    <id column="id" property="id" ></id>
+    <result column="attname" property="attname" ></result>
+    <result column="pname" property="project.pname" ></result>
+    <result column="starttime" property="project.starttime" ></result>
+    <result column="endtime" property="project.endtime" ></result>
+    <result column="cou" property="remark" ></result>
+  </resultMap>
+  <select id="getCondition" resultMap="getConditionMap">
+    SELECT a.`attname`,p.`pname`,p.`starttime`,p.`endtime`,attt.cou
+      FROM attachment a LEFT JOIN project p
+      ON a.`pro_fk` = p.`pid`
+      LEFT JOIN (SELECT COUNT(pro_fk) cou,att.`pro_fk` fk FROM attachment att GROUP BY pro_fk ) attt
+      ON a.`pro_fk` = attt.fk
+      where
+      <if test="cid==0" >
+        attname like concat(concat('%',#{keyword}),'%') or
+        pname like concat(concat('%',#{keyword}),'%')
+      </if>
+      <if test="cid == 1" >
+        attname like concat(concat('%',#{keyword}),'%')
+      </if>
+      <if test="cid == 2" >
+        pname like concat(concat('%',#{keyword}),'%')
+      </if>
+      <if test="orderby == 1" >
+        order by starttime
+      </if>
+      <if test="orderby == 2" >
+        order by endtime
+      </if>
+  </select>
+</mapper>

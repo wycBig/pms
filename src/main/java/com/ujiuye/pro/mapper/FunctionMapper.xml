@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.pro.mapper.FunctionMapper" >
+
+  <insert id="addFunction">
+      INSERT INTO function (proname,analysisname,modele_fk,
+      functionname,level,simpledis,detaileddis,remark ) values(
+      #{proname},#{analysisname},#{modeleFk},#{functionname},#{level},
+      #{simpledis},#{detaileddis},#{remark}
+      )
+  </insert>
+    <select id="getAllFunction" resultType="com.ujiuye.pro.bean.Function">
+        select * from function
+    </select>
+    <select id="getAnalDel" resultType="com.ujiuye.pro.bean.Function">
+        select * from function where id = #{id}
+    </select>
+</mapper>

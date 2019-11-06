@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.cus.mapper.CustomerMapper" >
+
+  <insert id="insertCustomer">
+      insert into  customer (id, comname, companyperson,
+      comaddress, comphone, camera,present, remark, addtime)
+      values (null,#{comname},#{companyperson},#{comaddress},#{comphone},#{camera},
+      #{present},#{remark},#{addtime})
+</insert>
+    <update id="updateCustomer">
+        update customer set comname = #{comname}, companyperson= #{companyperson},
+      comaddress= #{comaddress}, comphone= #{comphone}, camera= #{camera},
+      present= #{present} , remark= #{remark}
+      where id = #{id}
+    </update>
+    <delete id="deleteCustomers">
+        delete from customer where id in (#{id})
+    </delete>
+    <select id="getAllCustomer" resultType="com.ujiuye.cus.bean.Customer">
+        select * from customer
+    </select>
+    <select id="getCustomer" resultType="com.ujiuye.cus.bean.Customer">
+        select * from customer where id = #{id}
+    </select>
+
+    <!-- 根据公司名跟联系人模糊查询正序 -->
+    <select id="getCustomerCondition" resultType="com.ujiuye.cus.bean.Customer">
+          select * from customer where comname like concat(concat('%',#{keyword}),'%') or
+          companyperson like concat(concat('%',#{keyword}),'%')
+          order by comname
+    </select>
+    <!-- 根据公司名跟联系人模糊查询逆序 -->
+    <select id="getCustomerConditionDESC" resultType="com.ujiuye.cus.bean.Customer">
+         select * from customer where comname like concat(concat('%',#{keyword}),'%') or
+          companyperson like concat(concat('%',#{keyword}),'%')
+          order by comname desc
+    </select>
+    <!-- 根据公司名模糊查询正序 -->
+    <select id="getByComPanyAsc" resultType="com.ujiuye.cus.bean.Customer">
+         select * from customer where comname like concat(concat('%',#{keyword}),'%')
+        order by comname
+    </select>
+    <!-- 根据公司名模糊查询逆序 -->
+    <select id="getByComPanyDesc" resultType="com.ujiuye.cus.bean.Customer">
+         select * from customer where comname like concat(concat('%',#{keyword}),'%')
+        order by comname desc
+    </select>
+
+    <!-- 根据联系人模糊查询逆序 -->
+    <select id="getByPersonAsc" resultType="com.ujiuye.cus.bean.Customer">
+        select * from customer where
+          companyperson like concat(concat('%',#{keyword}),'%')
+          order by comname
+    </select>
+    <!-- 根据联系人模糊查询逆序 -->
+
+    <select id="getByPersonDesc" resultType="com.ujiuye.cus.bean.Customer">
+        select * from customer where
+          companyperson like concat(concat('%',#{keyword}),'%')
+          order by comname desc
+    </select>
+
+</mapper>

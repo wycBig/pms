@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.usual.mapper.BaoXiaoMapper" >
+    <!-- 插入数据 -->
+    <insert id="addMessage">
+        insert into baoxiao (bxid,paymode,totalmoney,bxtime,bxremark,bxstatus,
+        emp_fk) values (#{bxid},#{paymode},#{totalmoney},#{bxtime},
+        #{bxremark},#{bxstatus},#{empFk})
+    </insert>
+
+    <select id="getList" resultMap="getListMap">
+        SELECT b.`bxid`,b.`paymode`,e.`ename`,b.`totalmoney`,
+        b.`bxtime`,b.`bxremark`,b.`bxstatus`
+        FROM baoxiao b LEFT JOIN employee e
+        ON b.`emp_fk` = e.`eid`
+        where  e.`eid` = #{eid}
+        <if test="status != null" >
+            and b.`bxstatus` = #{status}
+        </if>
+        <if test="keyword != null" >
+            AND b.`bxremark` LIKE #{keyword}
+        </if>
+
+    </select>
+    <select id="listAll" resultMap="getListMap">
+        SELECT b.`bxid`,b.`paymode`,e.`ename`,b.`totalmoney`,
+        b.`bxtime`,b.`bxremark`,b.`bxstatus`
+        FROM baoxiao b LEFT JOIN employee e
+        ON b.`emp_fk` = e.`eid`
+    </select>
+    <resultMap id="getListMap" type="com.ujiuye.usual.bean.BaoXiao">
+        <id column="bxid" property="bxid" />
+        <result column="paymode" property="paymode" />
+        <result column="ename" property="employee.ename" />
+        <result column="totalmoney" property="totalmoney" />
+        <result column="bxtime" property="bxtime" />
+        <result column="bxremark" property="bxremark" />
+        <result column="bxstatus" property="bxstatus" />
+    </resultMap>
+</mapper>

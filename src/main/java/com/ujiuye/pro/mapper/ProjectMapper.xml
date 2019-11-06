@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.pro.mapper.ProjectMapper" >
+
+  <insert id="addProject">
+      insert into project (pname,comname,comper,empcount,
+      starttime,buildtime,cost,level,endtime,remark,emp_fk)
+      values (#{pname},#{comname},#{comper},
+      #{empcount},#{starttime},#{buildtime},#{cost},
+      #{level},#{endtime},#{remark},#{empFk})
+  </insert>
+    <update id="editPro">
+        update project set pname=#{pname},comname=#{comname},comper=#{comper},
+        empcount=#{empcount},starttime=#{starttime},buildtime=#{buildtime},
+        cost=#{cost},level=#{level},endtime=#{endtime},remark=#{remark},
+        emp_fk=#{empFk} where pid = #{pid}
+    </update>
+    <delete id="deleteProjects">
+        delete from project where pid in (#{id})
+    </delete>
+    <select id="getAllPro" resultType="com.ujiuye.pro.bean.Project">
+        select * from project
+    </select>
+    <select id="getNeedPro" resultType="com.ujiuye.pro.bean.Project">
+        SELECT * FROM project WHERE pid IN (SELECT id FROM analysis)
+    </select>
+    <select id="getProject" resultType="com.ujiuye.pro.bean.Project">
+        SELECT * FROM project WHERE pid = #{pid}
+    </select>
+    <!--根据项目名获取经理名，立定时间查询-->
+    <select id="getProCondition" resultType="com.ujiuye.pro.bean.Project">
+        select * from project where pname like concat(concat('%',#{keyword}),'%') or
+          emp_fk in (select eid from employee where ename like concat(concat('%',#{keyword}),'%') )
+          order by starttime
+    </select>
+    <!-- 根据项目名获取经理名，立定时间查询 -->
+    <select id="getProConditionDESC" resultType="com.ujiuye.pro.bean.Project">
+         select * from project where pname like concat(concat('%',#{keyword}),'%') or
+          emp_fk in (select eid from employee where ename like concat(concat('%',#{keyword}),'%') )
+          order by endtime
+    </select>
+    <!-- 根据项目名，立定时间查询 -->
+    <select id="getByProPanyAsc" resultType="com.ujiuye.pro.bean.Project">
+         select * from project where pname like concat(concat('%',#{keyword}),'%')
+          order by starttime
+    </select>
+    <!--根据项目名，完成时间查询 -->
+    <select id="getByProPanyDesc" resultType="com.ujiuye.pro.bean.Project">
+         select * from project where pname like concat(concat('%',#{keyword}),'%')
+          order by endtime
+    </select>
+
+    <!-- 根据经理名，立定时间查询 -->
+    <select id="getByPersonAsc" resultType="com.ujiuye.pro.bean.Project">
+         select * from project where
+          emp_fk in (select eid from employee where ename like concat(concat('%',#{keyword}),'%') )
+          order by starttime
+    </select>
+    <!-- 根据经理名，完成时间查询-->
+
+    <select id="getByPersonDesc" resultType="com.ujiuye.pro.bean.Project">
+         select * from project where
+          emp_fk in (select eid from employee where ename like concat(concat('%',#{keyword}),'%') )
+          order by endtime
+    </select>
+</mapper>
